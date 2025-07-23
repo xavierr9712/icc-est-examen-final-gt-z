@@ -1,5 +1,7 @@
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
@@ -8,7 +10,47 @@ import models.Maquina;
 
 public class App {
     public static void main(String[] args) throws Exception {
+    
         List<Maquina> maquinas = crearMaquinas();
+        MaquinaController controller = new MaquinaController();
+
+        int umbralA = 100;
+        Stack<Maquina> filteredStack = controller.filtrarPorSubred(maquinas, umbralA);
+        System.out.println("metodo A " + umbralA + " ");
+        System.out.println("Stack con:");
+        filteredStack.forEach(System.out::println); 
+        System.out.println("filtradas: " + filteredStack.size());
+        System.out.println("\n");
+
+        
+        Set<Maquina> sortedSet = controller.ordenarPorSubred(filteredStack);
+        System.out.println("Metodo B: ordenarPorSubred(Stack)");
+        sortedSet.forEach(System.out::println);
+        System.out.println("numero de la maquina despues de oredenar: " + sortedSet.size());
+        System.out.println("\n");
+
+        
+        Map<Integer, Queue<Maquina>> groupedMap = controller.agruparPorRiesgo(maquinas);
+        System.out.println("Metodo C: agruparPorRiesgo(maquinas)");
+        groupedMap.forEach((riesgo, queue) -> {
+            System.out.println(" " + riesgo + "->");
+            queue.forEach(m -> System.out.println(" [ " + m.getNombre() + " " + m.getSubred() + "]"));
+        });
+        System.out.println("\n");
+
+        Stack<Maquina> exploitedGroup = controller.explotarGrupo(groupedMap);
+        System.out.println(" Method D: explotarGrupo(Map) ");
+        System.out.println("| Método | Salida esperada                                                                  |");
+        System.out.println("| ------ | -------------------------------------------------------------------------------- |");
+      
+       
+        while (!exploitedGroup.isEmpty()) {
+            System.out.println(exploitedGroup.pop());
+           
+        }
+        System.out.println("\n");
+
+    
 
     }
 
